@@ -8,26 +8,26 @@ skinparam defaultFontSize 11
 
 digraph dfd2{
     node[shape=record]
-        zookeeper [label = "{Process: zookeeper | --configuration_server--\n--infrastructural--\nConfiguration Server: ZooKeeper\n}" shape = Mrecord];
-        kafka [label = "{Process: kafka | --message_broker--\n--infrastructural--\nMessage Broker: Kafka\nPort: 9092\n}" shape = Mrecord];
-        zookeeper -> kafka [label = " --restful_http--\n--encrypted_connection--"]
-        order [label = "{Process: order | --internal--\n--entrypoint--\nPort: 8080\nEndpoints: ['/order', '/', '/form.html', '/line', '/\{id\}']\n}" shape = Mrecord];
-        order -> kafka [label = " --restful_http--\n--message_producer_kafka--\n--encrypted_connection--\nProducer Topic: order\n"]
-        invoicing [label = "{Process: invoicing | --internal--\n--local_logging--\n--entrypoint--\nPort: 8080\nEndpoints: ['/', '/\{id\}']\n}" shape = Mrecord];
-        kafka -> invoicing [label = " --restful_http--\n--message_consumer_kafka--\n--encrypted_connection--\nConsumer Topic: order\n"]
-        shipping [label = "{Process: shipping | --internal--\n--local_logging--\n--entrypoint--\nPort: 8080\nEndpoints: ['/', '/\{id\}']\n}" shape = Mrecord];
-        kafka -> shipping [label = " --restful_http--\n--message_consumer_kafka--\n--encrypted_connection--\nConsumer Topic: order\n"]
-        apache [label = "{Process: apache | --web_server--\n--gateway--\n--infrastructural--\n--entrypoint--\nWeb Server: Apache httpd\nPort: 80\n}" shape = Mrecord];
-        apache -> order [label = " --restful_http--\n--encrypted_connection--"]
-        apache -> shipping [label = " --restful_http--\n--encrypted_connection--"]
-        apache -> invoicing [label = " --restful_http--\n--encrypted_connection--"]
+        zookeeper [label = "{Service: zookeeper | --configuration_server--\n--infrastructural--\nConfiguration Server: ZooKeeper\n}" shape = Mrecord];
+        kafka [label = "{Service: kafka | --message_broker--\n--infrastructural--\nMessage Broker: Kafka\nPort: 9092\n}" shape = Mrecord];
+        zookeeper -> kafka [label = " --restful_http--\n"]
+        order [label = "{Service: order | --internal--\n--entrypoint--\nPort: 8080\nEndpoints: ['/order', '/', '/form.html', '/line', '/\{id\}']\n}" shape = Mrecord];
+        order -> kafka [label = " --restful_http--\n--message_producer_kafka--\nProducer Topic: order\n"]
+        invoicing [label = "{Service: invoicing | --internal--\n--local_logging--\n--entrypoint--\nPort: 8080\nEndpoints: ['/', '/\{id\}']\n}" shape = Mrecord];
+        kafka -> invoicing [label = " --restful_http--\n--message_consumer_kafka--\nConsumer Topic: order\n"]
+        shipping [label = "{Service: shipping | --internal--\n--local_logging--\n--entrypoint--\nPort: 8080\nEndpoints: ['/', '/\{id\}']\n}" shape = Mrecord];
+        kafka -> shipping [label = " --restful_http--\n--message_consumer_kafka--\nConsumer Topic: order\n"]
+        apache [label = "{Service: apache | --web_server--\n--infrastructural--\n--entrypoint--\nWeb Server: Apache httpd\nPort: 80\n}" shape = Mrecord];
+        apache -> order [label = " --restful_http--\n"]
+        apache -> shipping [label = " --restful_http--\n"]
+        apache -> invoicing [label = " --restful_http--\n"]
         user [label = "{External Entity: user | --user_stereotype--\n}"];
         user -> apache [label = " --restful_http--\n"]
         apache -> user [label = " --restful_http--\n"]
-        postgres [label = "|{Process: postgres | --database--\n--plaintext_credentials--\nDatabase: PostgreSQL\nUsername: dbuser\nPassword: dbpass\n}"]
-        postgres -> order [label = " --jdbc--\n--plaintext_credentials_link--\n--encrypted_connection--\nUsername: dbuser\n Password: dbpass\n"]
-        postgres -> shipping [label = " --jdbc--\n--plaintext_credentials_link--\n--encrypted_connection--\nUsername: dbuser\n Password: dbpass\n"]
-        postgres -> invoicing [label = " --jdbc--\n--plaintext_credentials_link--\n--encrypted_connection--\nUsername: dbuser\n Password: dbpass\n"]
+        postgres [label = "|{Service: postgres | --database--\n--plaintext_credentials--\nDatabase: PostgreSQL\nUsername: dbuser\nPassword: dbpass\n}"]
+        postgres -> order [label = " --jdbc--\n--plaintext_credentials_link--\nUsername: dbuser\nPassword: dbpass\n"]
+        postgres -> shipping [label = " --jdbc--\n--plaintext_credentials_link--\nUsername: dbuser\nPassword: dbpass\n"]
+        postgres -> invoicing [label = " --jdbc--\n--plaintext_credentials_link--\nUsername: dbuser\nPassword: dbpass\n"]
 
 }
 @enduml
